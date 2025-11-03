@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Load Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>CPU Load Simulator</h1>
+            <div class="controls">
+                <button id="startBtn" class="btn btn-primary">Start Simulation</button>
+                <button id="stopBtn" class="btn btn-secondary" disabled>Stop Simulation</button>
+                <button id="exportBtn" class="btn btn-warning">Export Settings</button>
+                <label for="importInput" class="btn btn-warning" style="cursor: pointer; margin: 0;">
+                    Import Settings
+                    <input type="file" id="importInput" accept=".json" style="display: none;">
+                </label>
+            </div>
+        </header>
+
+        <div class="config-panel" id="configPanel">
+            <div class="config-panel-header">
+                <h2>Simulation Configuration</h2>
+                <span class="collapse-indicator" id="collapseIndicator">▼</span>
+            </div>
+            <div class="config-panel-content" id="configPanelContent">
+                <div class="config-section">
+                    <h3>Simulation Parameters</h3>
+                    <div class="parameters-grid-two-columns">
+                        <div class="parameters-column">
+                            <div class="parameter-group">
+                                <label for="numSegments">Number of Segments</label>
+                                <input type="number" id="numSegments" class="parameter-input" min="1" value="32">
+                            </div>
+                            <div class="parameter-group">
+                                <label for="numCores">Number of Cores per Segment</label>
+                                <input type="number" id="numCores" class="parameter-input" min="1" value="10">
+                            </div>
+                            <div class="parameter-group">
+                                <label for="coreCapacity">Core Capacity</label>
+                                <input type="number" id="coreCapacity" class="parameter-input" min="1" value="100">
+                            </div>
+                            <div class="parameter-group">
+                                <label for="sliceDev">Slice Deviation</label>
+                                <input type="number" id="sliceDev" class="parameter-input" min="0" max="1" step="0.01"
+                                    value="0.05">
+                            </div>
+                            <div class="parameter-group">
+                                <label for="sliceDelay">Slice Delay Deviation, s</label>
+                                <input type="number" id="sliceDelay" class="parameter-input" min="0" value="10">
+                            </div>
+                        </div>
+                        <div class="parameters-column">
+                            <div class="parameter-group">
+                                <label for="degradationFunction">Degradation Function</label>
+                                <select id="degradationFunction" class="parameter-input">
+                                    <option value="linear">Linear</option>
+                                    <option value="zero">Zero</option>
+                                    <option value="exponential">Exponential</option>
+                                    <option value="hardExponential">Hard Exponential</option>
+                                </select>
+                                <svg id="degradationGraph" width="100%" height="400" viewBox="0 0 400 400"
+                                    preserveAspectRatio="none"
+                                    style="margin-top: 10px; border: 1px solid #e0e0e0; border-radius: 4px; background: white; display: block;">
+                                    <!-- Graph will be drawn here -->
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>Session Configuration</h3>
+                    <div class="sessions-config-grid">
+                        <!-- Service Sessions -->
+                        <div class="session-type-config">
+                            <h3 class="session-type-title service">Service Sessions</h3>
+                            <div class="session-params-grid">
+                                <div class="parameter-group">
+                                    <label for="serviceCount">Number of Sessions</label>
+                                    <input type="number" id="serviceCount" class="parameter-input" min="0" value="10">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="serviceJobSizeAvg">Avg Job Size</label>
+                                    <input type="number" id="serviceJobSizeAvg" class="parameter-input" min="1"
+                                        value="10000">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="serviceJobSizeDev">Job Size Std Dev</label>
+                                    <input type="number" id="serviceJobSizeDev" class="parameter-input" min="0"
+                                        value="750">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="serviceIntervalAvg">Avg Interval, s</label>
+                                    <input type="number" id="serviceIntervalAvg" class="parameter-input" min="1"
+                                        value="40">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="serviceIntervalDev">Interval Std Dev, s</label>
+                                    <input type="number" id="serviceIntervalDev" class="parameter-input" min="0"
+                                        value="8">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ETL Sessions -->
+                        <div class="session-type-config">
+                            <h3 class="session-type-title etl">ETL Sessions</h3>
+                            <div class="session-params-grid">
+                                <div class="parameter-group">
+                                    <label for="etlCount">Number of Sessions</label>
+                                    <input type="number" id="etlCount" class="parameter-input" min="0" value="20">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="etlJobSizeAvg">Avg Job Size</label>
+                                    <input type="number" id="etlJobSizeAvg" class="parameter-input" min="1"
+                                        value="45000">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="etlJobSizeDev">Job Size Std Dev</label>
+                                    <input type="number" id="etlJobSizeDev" class="parameter-input" min="0"
+                                        value="15000">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="etlIntervalAvg">Avg Interval, s</label>
+                                    <input type="number" id="etlIntervalAvg" class="parameter-input" min="1"
+                                        value="650">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="etlIntervalDev">Interval Std Dev, s</label>
+                                    <input type="number" id="etlIntervalDev" class="parameter-input" min="0"
+                                        value="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ad-hoc Sessions -->
+                        <div class="session-type-config">
+                            <h3 class="session-type-title adhoc">Ad-hoc Sessions</h3>
+                            <div class="session-params-grid">
+                                <div class="parameter-group">
+                                    <label for="adhocCount">Number of Sessions</label>
+                                    <input type="number" id="adhocCount" class="parameter-input" min="0" value="12">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="adhocJobSizeAvg">Avg Job Size</label>
+                                    <input type="number" id="adhocJobSizeAvg" class="parameter-input" min="1"
+                                        value="110000">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="adhocJobSizeDev">Job Size Std Dev</label>
+                                    <input type="number" id="adhocJobSizeDev" class="parameter-input" min="0"
+                                        value="55000">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="adhocIntervalAvg">Avg Interval, s</label>
+                                    <input type="number" id="adhocIntervalAvg" class="parameter-input" min="1"
+                                        value="450">
+                                </div>
+                                <div class="parameter-group">
+                                    <label for="adhocIntervalDev">Interval Std Dev, s</label>
+                                    <input type="number" id="adhocIntervalDev" class="parameter-input" min="0"
+                                        value="450">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-container">
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Time:</span>
+                    <span id="currentTime" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Active Sessions:</span>
+                    <span id="activeSessions" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Overloaded Segments:</span>
+                    <span id="overloadedSegments" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Total Work:</span>
+                    <span id="totalWork" class="stat-value">0</span>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="sessions-panel">
+                    <h2>Sessions</h2>
+                    <div class="sessions-columns">
+                        <div class="session-column">
+                            <h3 class="session-type-title service">Service Sessions</h3>
+                            <div id="serviceSessionsList" class="sessions-list">
+                                <!-- Service sessions will be populated here -->
+                            </div>
+                        </div>
+                        <div class="session-column">
+                            <h3 class="session-type-title etl">ETL Sessions</h3>
+                            <div id="etlSessionsList" class="sessions-list">
+                                <!-- ETL sessions will be populated here -->
+                            </div>
+                        </div>
+                        <div class="session-column">
+                            <h3 class="session-type-title adhoc">Ad-hoc Sessions</h3>
+                            <div id="adhocSessionsList" class="sessions-list">
+                                <!-- Ad-hoc sessions will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="segments-panel">
+                    <h2>Segments</h2>
+                    <div id="segmentsList" class="segments-list">
+                        <!-- Segments will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <h3>Legend</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="legend-color active"></span>
+                        <span>Active Session</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color idle"></span>
+                        <span>Idle Session</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-scale">
+                            <span class="legend-label">Overload Factor:</span>
+                            <span class="legend-color-scale">
+                                <span class="legend-color" style="background: rgb(233, 236, 239);"
+                                    title="0: Free (Idle)"></span>
+                                <span class="legend-color" style="background: rgb(150, 200, 180);" title="1"></span>
+                                <span class="legend-color" style="background: rgb(160, 190, 150);" title="2"></span>
+                                <span class="legend-color" style="background: rgb(180, 190, 130);" title="3"></span>
+                                <span class="legend-color" style="background: rgb(200, 180, 120);" title="4"></span>
+                                <span class="legend-color" style="background: rgb(210, 160, 110);" title="5"></span>
+                                <span class="legend-color" style="background: rgb(200, 140, 100);" title="6"></span>
+                                <span class="legend-color" style="background: rgb(190, 120, 90);" title="7"></span>
+                                <span class="legend-color" style="background: rgb(170, 90, 80);" title="8"></span>
+                                <span class="legend-color" style="background: rgb(150, 50, 60);" title="9"></span>
+                                <span class="legend-color" style="background: rgb(128, 0, 32);"
+                                    title="10: Critical (Burgundy)"></span>
+                            </span>
+                            <span class="legend-values">0 (Free) → 10 (Critical)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="models.js"></script>
+        <script src="visualization.js"></script>
+        <script src="app.js"></script>
+</body>
+
+</html>
