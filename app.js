@@ -125,8 +125,10 @@ class CPULoadSimulator {
         const selectedDegradationFunction = degradationFunctions[degradationFunctionType] || linearDegradation;
 
         // Get sliceDev and sliceDelay from inputs
-        const sliceDev = parseFloat(this.sliceDevInput.value) || 0.05;
-        const sliceDelay = (parseInt(this.sliceDelayInput.value) || 1) * 1000;
+        const sliceDevValue = parseFloat(this.sliceDevInput.value);
+        const sliceDev = isNaN(sliceDevValue) ? 0.05 : sliceDevValue;
+        const sliceDelayValue = parseInt(this.sliceDelayInput.value);
+        const sliceDelay = isNaN(sliceDelayValue) ? 1000 : sliceDelayValue * 1000;
 
         // Create GP instance with parameters from inputs
         this.gp = new GP(
