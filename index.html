@@ -35,11 +35,11 @@
                         <div class="parameters-column">
                             <div class="parameter-group">
                                 <label for="numSegments">Number of Segments</label>
-                                <input type="number" id="numSegments" class="parameter-input" min="1" value="32">
+                                <input type="number" id="numSegments" class="parameter-input" min="1" value="12">
                             </div>
                             <div class="parameter-group">
                                 <label for="numCores">Number of Cores per Segment</label>
-                                <input type="number" id="numCores" class="parameter-input" min="1" value="10">
+                                <input type="number" id="numCores" class="parameter-input" min="1" value="5">
                             </div>
                             <div class="parameter-group">
                                 <label for="coreCapacity">Core Capacity</label>
@@ -47,12 +47,12 @@
                             </div>
                             <div class="parameter-group">
                                 <label for="sliceDev">Slice Deviation</label>
-                                <input type="number" id="sliceDev" class="parameter-input" min="0" max="1" step="0.01"
+                                <input type="number" id="sliceDev" class="parameter-input" min="0" step="0.01"
                                     value="0.05">
                             </div>
                             <div class="parameter-group">
                                 <label for="sliceDelay">Slice Delay Deviation, s</label>
-                                <input type="number" id="sliceDelay" class="parameter-input" min="0" value="10">
+                                <input type="number" id="sliceDelay" class="parameter-input" min="0" value="3">
                             </div>
                         </div>
                         <div class="parameters-column">
@@ -62,7 +62,8 @@
                                     <option value="linear">Linear</option>
                                     <option value="zero">Zero</option>
                                     <option value="exponential">Exponential</option>
-                                    <option value="hardExponential">Hard Exponential</option>
+                                    <option value="hardExponential" selected>Hard Exponential</option>
+                                    <option value="veryHardExponential">Very Hard Exponential</option>
                                 </select>
                                 <svg id="degradationGraph" width="100%" height="400" viewBox="0 0 400 400"
                                     preserveAspectRatio="none"
@@ -83,27 +84,27 @@
                             <div class="session-params-grid">
                                 <div class="parameter-group">
                                     <label for="serviceCount">Number of Sessions</label>
-                                    <input type="number" id="serviceCount" class="parameter-input" min="0" value="10">
+                                    <input type="number" id="serviceCount" class="parameter-input" min="0" value="20">
                                 </div>
                                 <div class="parameter-group">
                                     <label for="serviceJobSizeAvg">Avg Job Size</label>
                                     <input type="number" id="serviceJobSizeAvg" class="parameter-input" min="1"
-                                        value="10000">
+                                        value="100">
                                 </div>
                                 <div class="parameter-group">
                                     <label for="serviceJobSizeDev">Job Size Std Dev</label>
                                     <input type="number" id="serviceJobSizeDev" class="parameter-input" min="0"
-                                        value="750">
+                                        value="10">
                                 </div>
                                 <div class="parameter-group">
                                     <label for="serviceIntervalAvg">Avg Interval, s</label>
                                     <input type="number" id="serviceIntervalAvg" class="parameter-input" min="1"
-                                        value="40">
+                                        value="10">
                                 </div>
                                 <div class="parameter-group">
                                     <label for="serviceIntervalDev">Interval Std Dev, s</label>
                                     <input type="number" id="serviceIntervalDev" class="parameter-input" min="0"
-                                        value="8">
+                                        value="10">
                                 </div>
                             </div>
                         </div>
@@ -119,7 +120,7 @@
                                 <div class="parameter-group">
                                     <label for="etlJobSizeAvg">Avg Job Size</label>
                                     <input type="number" id="etlJobSizeAvg" class="parameter-input" min="1"
-                                        value="45000">
+                                        value="1000">
                                 </div>
                                 <div class="parameter-group">
                                     <label for="etlJobSizeDev">Job Size Std Dev</label>

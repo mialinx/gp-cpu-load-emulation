@@ -54,8 +54,26 @@ function hardExponentialDegradation(overloadFactor) {
     return maxY * (Math.exp(k * overloadFactor) - 1) / (Math.exp(k * maxX) - 1);
 }
 
+function veryHardExponentialDegradation(overloadFactor) {
+    // Returns 0 when overloadFactor is 0, and 0.9 when overloadFactor >= 8
+    // Exponential curve between these points, with sharper growth than exponentialDegradation
+    if (overloadFactor <= 0) {
+        return 0;
+    }
+    if (overloadFactor >= 4) {
+        return 0.9;
+    }
+    // Exponential interpolation: using e^(k*x) normalized to [0, 0.9]
+    // Using higher growth rate k=0.7 for sharper curve (vs 0.4 in exponentialDegradation)
+    const k = 2.9;
+    const maxX = 4;
+    const maxY = 0.9;
+    // Normalized exponential: y = maxY * (e^(k*x) - 1) / (e^(k*maxX) - 1)
+    return maxY * (Math.exp(k * overloadFactor) - 1) / (Math.exp(k * maxX) - 1);
+}
+
 // Export for Node.js modules
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { linearDegradation, zeroDegradation, exponentialDegradation, hardExponentialDegradation };
+    module.exports = { linearDegradation, zeroDegradation, exponentialDegradation, hardExponentialDegradation, veryHardExponentialDegradation };
 }
 

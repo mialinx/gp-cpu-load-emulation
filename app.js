@@ -120,7 +120,8 @@ class CPULoadSimulator {
             'linear': linearDegradation,
             'zero': zeroDegradation,
             'exponential': exponentialDegradation,
-            'hardExponential': hardExponentialDegradation
+            'hardExponential': hardExponentialDegradation,
+            'veryHardExponential': veryHardExponentialDegradation
         };
         const selectedDegradationFunction = degradationFunctions[degradationFunctionType] || linearDegradation;
 
@@ -331,7 +332,8 @@ class CPULoadSimulator {
             'linear': linearDegradation,
             'zero': zeroDegradation,
             'exponential': exponentialDegradation,
-            'hardExponential': hardExponentialDegradation
+            'hardExponential': hardExponentialDegradation,
+            'veryHardExponential': veryHardExponentialDegradation,
         };
         const degradationFunction = degradationFunctions[degradationFunctionType] || linearDegradation;
 
